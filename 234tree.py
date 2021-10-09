@@ -7,7 +7,7 @@ class DataItem:
 		self.dData = dd#one piece of data
 
 	def displayItem(self):	#format " /27"
-		print( '/', self.dData)
+		print('/', self.dData)
         #end class DataItem
 
 class Node:
@@ -19,6 +19,7 @@ class Node:
 		self._pParent = None
 		self._childArray = []	#array of nodes
 		self._itemArray = []	#array of data
+
 		for j in range(self._ORDER):	#initialize arrays
 			self._childArray.append(None)
 		for k in range(self._ORDER - 1):
@@ -30,7 +31,7 @@ class Node:
 		if pChild:
 			pChild._pParent = self
 
-			#disconnect child from this node, return it
+	#disconnect child from this node, return it
 	def disconnectChild(self, childNum):
 		pTempNode = self._childArray[childNum]
 		self._childArray[childNum] = None
@@ -137,6 +138,13 @@ class Tree234:
 		pCurNode.insertItem(pTempItem)	#insert new item
 	#end insert()
 
+	def remove(self, key):
+    	
+		if find(key):
+			return
+			
+			
+		
 	def split(self, pThisNode):	#split the node
 		#assumes node is full
 		
@@ -223,15 +231,17 @@ def find():
 	else:
 		print ('Could not find', value)
 
-def remove():
-    value = int(input("Enter value to remove: "))
 
 
 
-case = { 's' : show,
+
+case = { 
+	
+	's' : show,
 	'i' : insert,
 	'f' : find,
-    'r': remove}
+    'r': remove
+}
 #switch simulation completed
 
 while True:
