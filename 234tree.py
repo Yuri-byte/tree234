@@ -1,4 +1,5 @@
 #demonstrates 234 tree
+import sys
 
 class DataItem:
 
@@ -95,7 +96,7 @@ class Node:
 	def displayNode(self):	#format "/24/56/74"
 		for j in range(self._numItems):
 			self._itemArray[j].displayItem()	#format "/56"
-		print('/')	#final "/"
+		#print('/')	#final "/"
 
 #end class Node
 
@@ -139,10 +140,12 @@ class Tree234:
 	#end insert()
 
 	def remove(self, key):
-    	
-		if find(key):
+		found = find(key)
+		if found == -1: #can't find value
+			print('Can\'t find value: ', key)
 			return
-			
+		else: #found value
+			return
 			
 		
 	def split(self, pThisNode):	#split the node
@@ -195,7 +198,8 @@ class Tree234:
 		self.recDisplayTree(self._pRoot, 0, 0)
 
 	def recDisplayTree(self, pThisNode, level, childNumber):
-		print('level=', level, 'child=', childNumber, pThisNode.displayNode())	#display this node
+		print('level=', level, 'child=', childNumber)	#display this node
+		pThisNode.displayNode()
 
 		#call ourselves for each child of this node
 		numItems = pThisNode.getNumItems()
@@ -231,21 +235,35 @@ def find():
 	else:
 		print ('Could not find', value)
 
+def remove():
+	value = int(input('Enter value to delete: '))
+	removed = pTree.remove(value)
+	if removed != -1:
+		print('Removed ', value)
+	else:
+		return
+
+def exit():
+	confirm = input('Confirm exit (y/n)? ')
+	if confirm == 'y':
+		sys.exit()
+	elif confirm == 'n':
+		return
+	else:
+		exit()
 
 
-
-
-case = { 
-	
+case = {
 	's' : show,
 	'i' : insert,
 	'f' : find,
-    'r': remove
+    'r': remove,
+	'e': exit
 }
 #switch simulation completed
 
 while True:
-	choice = input('Enter first letter of show, insert, or find: \nS to show\nI to insert\nF to find\nR to remove\n')
+	choice = input('Enter first letter of show, insert, find, remove or exit: \ns to show\ni to insert\nf to find\nr to remove\ne to exit\n')
 	if case.get(choice, None):
 		case[choice]()
 	else:
