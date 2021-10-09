@@ -141,11 +141,17 @@ class Tree234:
 
 	def remove(self, key):
 		found = find(key)
-		if found == -1: #can't find value
+		if found == -1: #cant find
 			print('Can\'t find value: ', key)
 			return
 		else: #found value
-			return
+			#save item
+			tempItem = pCurNode._itemArray[found]
+
+			#disconnect it
+			pCurNode._itemArray[self._numItems-1] = None	#disconnect it
+			pCurNode._numItems -= 1#one less item
+			return pTemp#return item
 			
 		
 	def split(self, pThisNode):	#split the node
