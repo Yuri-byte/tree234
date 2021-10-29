@@ -115,12 +115,6 @@ class Node:
 		self._numItems -= 1#one less item
 		return pTemp#return item
 
-	def removeItem(self, index): #remove specific item 
-		pTemp = self._itemArray[index]	#save item
-		self._itemArray[index] = None	#disconnect it
-		self._numItems -= 1				#one less item
-		return pTemp					#return item
-
 	def displayNode(self):	#format "/24/56/74"
 		for j in range(self._numItems):
 			self._itemArray[j].displayItem()	#format "/56"
@@ -133,6 +127,7 @@ class Tree234:
 	#hence using a convention: name prefixed with an underscore, to treat them as non-public part
 	def __init__(self):
 		self._pRoot = Node()	#root node
+		self.globalArray = []
 
 	def inOrder(self, node):
 		for (i, item) in enumerate([node._childArray, node._itemArray]):
@@ -173,100 +168,21 @@ class Tree234:
 				pCurNode = self.getNextChild(pCurNode, dValue)
 		#end while
 		pCurNode.insertItem(pTempItem)	#insert new item
+		self.globalArray.append(dValue) #
 	#end insert()
 
 	def remove(self, dValue):
-		root = self._pRoot		#start from root
-		pCurNode = self._pRoot		#start from root
+		try:
+			self.globalArray.remove(dValue) #remove item from global array
+			copy_array = self.globalArray.copy()
+			self.globalArray.clear()
+			self._pRoot = Node()
+			for value in copy_array:
+				self.insert(value)
+			return 1
+		except:
+			return -1
 
-		while True: 				#find node
-			index = pCurNode.findItem(dValue)
-
-			if index != -1: 		#found it
-				break 				#proceed to remove	
-			elif pCurNode.isLeaf():	#can't find it
-				return -1			#finish remove
-			else:					#search deeper
-				pCurNode = self.getNextChild(pCurNode, dValue)
-		#end while
-		
-		numItems = pCurNode.getNumItems()
-
-		parent = pCurNode.getParent()
-
-		#case 1.1
-		if pCurNode.isLeaf() and pCurNode._numItems > 2: #proceed with remove
-			pCurNode.removeItem(index)
-			return dValue
-			
-		#case 1.2.1 - If the node containing x has 3-node or 4-node siblings
-
-		#case 1.2.2 - If both the siblings are 2-node but the parent node is either a 3-node or a 4-node
-		elif pCurNode.isLeaf() and pCurNode._numItems == 1:
-			childNum = pCurNode.getChildNum()
-			rightSibling = pCurNode.getSibling(childNum +1)	#get siblings
-			leftSibling = pCurNode.getSibling(childNum -1)
-			
-			#moving elements from sibling to parent and from parent to current node
-			if leftSibling.getNumItems() >= 2:
-				tempSibling = leftSibling.removeLargestItem()
-				temp = parent.removeItem(childNum)
-				pCurNode.insertItem(temp)
-				parent.insertItem(tempSibling)
-			elif rightSibling.getNumItems() >= 2:
-				tempSibling = rightSibling.removeItem(0)
-				temp = parent.removeItem(childNum)
-				pCurNode.insertItem(temp)
-				parent.insertItem(tempSibling)
-			elif parent.getNumItems() >= 2:
-				if(rightSibling):
-					temp = parent.removeItem(childNum)
-					tempSibling = rightSibling.removeItem(0)
-					parent.disconnectChild(childNum +1)
-				elif(leftSibling):
-					temp = parent.removeItem(childNum -1)
-					tempSibling = leftSibling.removeItem(0)
-					parent.disconnectChild(childNum -1)
-				
-				pCurNode.insertItem(temp)
-				pCurNode.insertItem(tempSibling)
-			#end if
-			index = find(dValue)			
-			pCurNode.removeItem(index)
-			return dValue
-
-		#case 1.2.3 - If both siblings and the parent node are a 2-node
-		elif parent != None and parent.getChild(0).getNumItems() == 1 and parent.getChild(1).getNumItems() == 1 and parent.getNumItems() == 1:
-			valueA = parent.getChild(0).removeLargestItem()
-			valueB = parent.getChild(1).removeLargestItem()
-
-			parent.insertItem(valueA)
-			parent.insertItem(valueB)
-		
-
-		#case 2 - If dValue is in an internal node and 
-		if pCurNode.isLeaf() == False:
-
-			#2.1 - If the element's left child has at least 2 keys, replace the element with its predecessor, p, and then recursively delete p.
-			if pCurNode.getChild(index).getNumItems() == 2:
-				pCurNode._itemArray[index] = pCurNode.getChild(0).removeLargestItem()
-
-			#2.2 - If the element's right child has at least 2 keys, replace the element with its successor, s, and then recursively delete s.
-			elif pCurNode.getChild(index + 1).getNumItems() == 2:
-				pCurNode._itemArray[index] = pCurNode.getChild(index + 1).removeItem(0)
-
-			#2.3 - If both children have only 1 key (the minimum), merge the right child into the left child and include the element, k, in the left child. Free the right child and recursively delete k from the left 
-			elif pCurNode.getChild(index).getNumItems() == 1 and pCurNode.getChild(index + 1).getNumItems() == 1:
-				valueA = pCurNode.getChild(index).removeLargestItem()
-				valueB = pCurNode.getChild(index + 1).removeLargestItem()
-
-				pCurNode.insertItem(valueA)
-				pCurNode.insertItem(valueB)
-
-				for i in pCurNode._itemArray:
-					if pCurNode._itemArray[i] == dValue:
-						pCurNode._itemArray[i] = None
-		
 	def split(self, pThisNode):	#split the node
 		#assumes node is full
 		
