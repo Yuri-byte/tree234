@@ -129,14 +129,6 @@ class Tree234:
 		self._pRoot = Node()	#root node
 		self.globalArray = []
 
-	def inOrder(self, node):
-		for (i, item) in enumerate([node._childArray, node._itemArray]):
-			if node._childArray[i]: 
-				self.inOrder(node._childArray[i])
-			yield item
-		if node._childArray[-1]: 
-			self.inOrder(node._childArray[-1])
-
 	def find(self, key):
 		pCurNode = self._pRoot	#start at root
 		while True:
