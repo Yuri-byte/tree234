@@ -173,12 +173,12 @@ class Tree234:
 
 	def remove(self, dValue):
 		try:
-			self.globalArray.remove(dValue) #remove item from global array
-			copy_array = self.globalArray.copy()
-			self.globalArray.clear()
-			self._pRoot = Node()
-			for value in copy_array:
-				self.insert(value)
+			self.globalArray.remove(dValue) 		#remove item from global array
+			copy_array = self.globalArray.copy()	#generate a copy of the global array
+			self.globalArray.clear()				#delete all values from the global array
+			self._pRoot = Node()					#declares new root for new tree
+			for value in copy_array:				
+				self.insert(value)	#insert all the values from the copy of the global array in the tree
 			return 1
 		except:
 			return -1
